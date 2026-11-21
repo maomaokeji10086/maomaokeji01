@@ -1,0 +1,1324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ===== 网站基础信息（SEO，便于搜索引擎收录与分享） ===== -->
+    <meta name="description" content="帽帽的个人网站：IT运维 / 系统集成 / 机房运维工程师，展示个人简介、专业技能、项目作品、工作经历与联系方式。">
+    <meta name="keywords" content="IT运维,系统集成,机房运维,网络工程师,虚拟化,深信服,个人网站">
+    <meta name="author" content="帽帽">
+    <meta name="theme-color" content="#1f4e79">
+    <title>帽帽 | IT运维工程师 · 个人网站</title>
+
+    <!-- Bootstrap 5 样式与图标（CDN 引入，保证页面在任何电脑打开都能正常显示） -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+
+    <style>
+        /* ==================================================
+           一、全局变量与基础样式（CSS 变量便于统一维护配色）
+           ================================================== */
+        :root {
+            --brand: #1f4e79;          /* 主色：稳重深蓝 */
+            --brand-dark: #163a5c;     /* 深色：导航/页脚 */
+            --brand-light: #2b5b94;    /* 浅色：按钮/强调 */
+            --accent: #8fc0f0;         /* 点缀色：进度条、标签 */
+            --page-bg: #f0f2f5;        /* 页面底色 */
+            --card-bg: #ffffff;
+            --text: #333333;
+            --muted: #6b7280;
+            --radius: 12px;
+            --shadow: 0 6px 20px rgba(22, 58, 92, .10);
+            --shadow-hover: 0 12px 28px rgba(22, 58, 92, .18);
+        }
+
+        * { box-sizing: border-box; }
+
+        html { scroll-behavior: smooth; scroll-padding-top: 76px; } /* 锚点跳转时避开固定导航 */
+
+        body {
+            font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--page-bg);
+            color: var(--text);
+            line-height: 1.75;
+            overflow-x: hidden;
+        }
+
+        /* 通用标题：左侧竖线 + 副标题 */
+        .section-head { margin-bottom: 28px; }
+        .section-title {
+            color: var(--brand);
+            border-left: 5px solid var(--brand);
+            padding-left: 14px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .section-sub { color: var(--muted); font-size: 14px; padding-left: 19px; }
+
+        /* 内容区留白 */
+        .section-block { padding: 64px 0; }
+        .section-block.alt { background: #fff; }
+
+        /* 卡片统一风格 + 悬停上浮效果 */
+        .app-card {
+            background: var(--card-bg);
+            border: 1px solid #e6e9ef;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            transition: transform .3s ease, box-shadow .3s ease;
+        }
+        .app-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-hover); }
+
+        /* ==================================================
+           二、导航栏
+           ================================================== */
+        .navbar { background: linear-gradient(90deg, var(--brand-dark), var(--brand)); }
+        .navbar .nav-link { color: rgba(255, 255, 255, .82); font-size: 15px; }
+        .navbar .nav-link:hover,
+        .navbar .nav-link.active { color: #fff; font-weight: 600; }
+        .navbar .nav-link.active { border-bottom: 2px solid var(--accent); }
+
+        /* ==================================================
+           三、首屏轮播（Bootstrap Carousel 组件）
+           ================================================== */
+        .hero-slide { height: 440px; position: relative; }
+        .hero-slide::after {           /* 半透明遮罩，保证文字清晰 */
+            content: "";
+            position: absolute; inset: 0;
+            background: linear-gradient(90deg, rgba(12, 38, 62, .82), rgba(12, 38, 62, .35));
+        }
+        .hero-slide img { height: 100%; object-fit: cover; }
+        .hero-caption {
+            position: absolute; left: 8%; right: 8%; top: 50%;
+            transform: translateY(-50%);
+            color: #fff; z-index: 2; max-width: 620px;
+        }
+        .hero-caption h1 { font-size: 40px; font-weight: 700; letter-spacing: 2px; }
+        .hero-caption .lead { font-size: 17px; opacity: .92; margin-bottom: 22px; }
+
+        /* ==================================================
+           四、关于我 & 数据统计
+           ================================================== */
+        .avatar-ring {
+            width: 108px; height: 108px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--brand), #4b86c4);
+            color: #fff; font-size: 50px;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 14px;
+            box-shadow: 0 8px 22px rgba(31, 78, 121, .32);
+        }
+        .stat-box { text-align: center; padding: 18px 8px; }
+        .stat-num { font-size: 30px; font-weight: 700; color: var(--brand); line-height: 1.2; }
+        .stat-label { font-size: 13px; color: var(--muted); }
+
+        /* ==================================================
+           五、专业技能（选项卡 + 进度条）
+           ================================================== */
+        .skill-bar { margin-bottom: 16px; }
+        .skill-bar .progress { height: 18px; border-radius: 9px; background: #e9eef5; }
+        .skill-bar .progress-bar { font-size: 12px; line-height: 18px; }
+
+        /* ==================================================
+           六、项目作品
+           ================================================== */
+        .work-card .icon {
+            width: 54px; height: 54px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 24px; color: #fff; margin-bottom: 14px;
+        }
+        .bg-grad-1 { background: linear-gradient(135deg, #1f4e79, #4b86c4); }
+        .bg-grad-2 { background: linear-gradient(135deg, #136f63, #33a58e); }
+        .bg-grad-3 { background: linear-gradient(135deg, #7a4b8e, #a37bbd); }
+        .bg-grad-4 { background: linear-gradient(135deg, #b5651d, #d99a4e); }
+
+        /* ==================================================
+           七、自定义视频播放器
+           ================================================== */
+        .video-player {
+            border-radius: var(--radius); overflow: hidden;
+            background: #000; box-shadow: var(--shadow);
+        }
+        .video-player video { width: 100%; height: auto; display: block; background: #000; cursor: pointer; }
+        .player-controls {
+            display: flex; align-items: center; gap: 10px;
+            padding: 10px 12px; background: var(--brand-dark); color: #fff;
+        }
+        .player-controls button {
+            background: none; border: none; color: #fff;
+            font-size: 15px; cursor: pointer; padding: 2px 4px; line-height: 1;
+        }
+        .player-controls button:hover { color: var(--accent); }
+        .time-display { font-size: 12px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+        .progress-bar-track {
+            flex: 1; position: relative; height: 6px; border-radius: 3px;
+            background: rgba(255, 255, 255, .35); cursor: pointer;
+        }
+        .progress-filled { height: 100%; width: 0; border-radius: 3px; background: var(--accent); pointer-events: none; }
+        .progress-dot {
+            position: absolute; top: 50%; left: 0; width: 12px; height: 12px;
+            border-radius: 50%; background: #fff; transform: translate(-50%, -50%);
+            box-shadow: 0 0 4px rgba(0, 0, 0, .3); pointer-events: none;
+        }
+
+        /* ==================================================
+           八、成长经历：时间轴
+           ================================================== */
+        .timeline { position: relative; padding-left: 28px; }
+        .timeline::before {
+            content: ""; position: absolute; left: 8px; top: 6px; bottom: 6px;
+            width: 3px; border-radius: 3px;
+            background: linear-gradient(var(--brand), var(--accent));
+        }
+        .timeline-item { position: relative; margin-bottom: 26px; }
+        .timeline-item::before {
+            content: ""; position: absolute; left: -25px; top: 8px;
+            width: 12px; height: 12px; border-radius: 50%;
+            background: #fff; border: 3px solid var(--brand);
+        }
+        .timeline-item h5 { margin-bottom: 2px; font-size: 17px; color: #1c2b3a; }
+        .timeline-item .meta { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+
+        /* ==================================================
+           九、网站维护 / 更新日志
+           ================================================== */
+        .log-table td, .log-table th { vertical-align: middle; font-size: 14px; }
+        .maintain-item {
+            display: flex; gap: 12px; align-items: flex-start;
+            padding: 14px 0; border-bottom: 1px dashed #e2e7ee;
+        }
+        .maintain-item:last-child { border-bottom: none; }
+        .maintain-item i { color: var(--brand); font-size: 18px; }
+
+        /* ==================================================
+           十、留言板
+           ================================================== */
+        .msg-item {
+            background: #f7f9fc; border: 1px solid #e6e9ef;
+            border-radius: 10px; padding: 12px 14px; margin-bottom: 10px;
+        }
+        .msg-item .msg-name { font-weight: 700; color: var(--brand); }
+        .msg-item .msg-time { font-size: 12px; color: var(--muted); }
+
+        /* ==================================================
+           十一、页脚 & 返回顶部
+           ================================================== */
+        footer { background: var(--brand-dark); color: #e8f0f8; }
+        footer a { color: #cfe0f5; text-decoration: none; }
+        footer a:hover { color: #fff; text-decoration: underline; }
+        footer h6 { color: #fff; }
+
+        #backToTop {
+            position: fixed; right: 22px; bottom: 26px; z-index: 999;
+            display: none; width: 44px; height: 44px; border-radius: 50%;
+        }
+
+        /* ==================================================
+           十二、响应式适配（手机 / 平板 / 打印）
+           ================================================== */
+        @media (max-width: 991.98px) {
+            .hero-slide { height: 360px; }
+            .hero-caption h1 { font-size: 30px; }
+            .section-block { padding: 48px 0; }
+        }
+        @media (max-width: 575.98px) {
+            .hero-slide { height: 320px; }
+            .hero-caption h1 { font-size: 24px; }
+            .hero-caption .lead { font-size: 14px; }
+            .stat-num { font-size: 24px; }
+        }
+        @media print {
+            .navbar, #backToTop, footer, .no-print { display: none !important; }
+            body { background: #fff; }
+        }
+    </style>
+</head>
+
+<body id="top">
+
+    <!-- 无障碍：键盘用户可直接跳到主要内容 -->
+    <a href="#main" class="visually-hidden-focusable">跳转到主要内容</a>
+
+    <!-- ============================================================
+         1. 页头导航（<header> + <nav>）
+         ============================================================ -->
+    <header class="site-header">
+        <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="#top">
+                    <i class="bi bi-person-badge me-1"></i>帽帽 · 个人网站
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                        aria-controls="navbarContent" aria-expanded="false" aria-label="展开导航菜单">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" href="#top"><i class="bi bi-house-door me-1"></i>首页</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#about"><i class="bi bi-person me-1"></i>关于我</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#skills"><i class="bi bi-gear me-1"></i>专业技能</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#works"><i class="bi bi-collection me-1"></i>项目作品</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#video"><i class="bi bi-play-circle me-1"></i>视频展示</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#journey"><i class="bi bi-signpost-split me-1"></i>成长经历</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#maintain"><i class="bi bi-tools me-1"></i>网站维护</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#contact"><i class="bi bi-envelope me-1"></i>联系我</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main id="main">
+
+        <!-- ============================================================
+             2. 首屏轮播（Bootstrap Carousel 插件）
+             提示：把下面 3 张图片的 src 换成自己的照片/机房实拍图即可
+             ============================================================ -->
+        <section aria-label="首屏展示">
+            <div id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4500">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="第 1 张"></button>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1" aria-label="第 2 张"></button>
+                    <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2" aria-label="第 3 张"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="hero-slide">
+                            <img src="https://placehold.co/1600x600/1f4e79/ffffff?text=IT+Operations+Engineer"
+                                 class="d-block w-100" alt="IT 运维工程师主题图">
+                            <div class="hero-caption">
+                                <h1>帽帽</h1>
+                                <p class="lead">IT 运维 / 系统集成 / 机房运维工程师<br>让每一台服务器稳定运行，让每一次会议万无一失</p>
+                                <a href="#about" class="btn btn-light px-4 me-2">了解更多</a>
+                                <a href="#contact" class="btn btn-outline-light px-4">联系我</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="hero-slide">
+                            <img src="https://placehold.co/1600x600/2b5b94/ffffff?text=Network+%26+System"
+                                 class="d-block w-100" alt="网络与系统运维主题图">
+                            <div class="hero-caption">
+                                <h4 class="display-6 fw-bold">网络与系统运维</h4>
+                                <p class="lead">局域网规划 · SD-WAN · 虚拟化 · 服务器运维 · 机房全栈管理</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="hero-slide">
+                            <img src="https://placehold.co/1600x600/163a5c/ffffff?text=Welcome+to+My+Site"
+                                 class="d-block w-100" alt="欢迎访问个人网站主题图">
+                            <div class="hero-caption">
+                                <h4 class="display-6 fw-bold">欢迎来到我的个人网站</h4>
+                                <p class="lead">十年磨一剑，专注 IT 运维与系统集成</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">上一张</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">下一张</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             3. 关于我（<section> + 数据统计）
+             ============================================================ -->
+        <section id="about" class="section-block">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-person-lines-fill me-2"></i>关于我</h2>
+                    <p class="section-sub">一名把机房当自己家照管的 IT 运维工程师</p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- 左侧：名片 -->
+                    <div class="col-lg-4">
+                        <article class="app-card h-100 text-center p-4">
+                            <div class="avatar-ring"><i class="bi bi-person-circle"></i></div>
+                            <h4 class="mb-1">帽帽</h4>
+                            <p class="text-muted small mb-2">IT运维 / 系统集成 / 机房运维工程师</p>
+                            <span class="badge bg-success rounded-pill mb-3"><i class="bi bi-check-circle me-1"></i>求职中</span>
+
+                            <ul class="list-unstyled small text-start mb-3">
+                                <li class="mb-2"><i class="bi bi-mortarboard text-primary me-2"></i>国家开放大学 · 大专</li>
+                                <li class="mb-2"><i class="bi bi-patch-check text-primary me-2"></i>CCNA 思科网络工程师</li>
+                                <li><i class="bi bi-geo-alt text-primary me-2"></i>上海 · 可出差</li>
+                            </ul>
+
+                            <div class="d-grid gap-2">
+                                <a href="#contact" class="btn btn-primary btn-sm"><i class="bi bi-envelope me-1"></i>给我留言</a>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-toggle="tooltip"
+                                        title="CCNA：思科认证网络工程师，具备网络规划与设备配置能力">
+                                    <i class="bi bi-patch-check me-1"></i>查看证书说明
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+
+                    <!-- 右侧：简介 + 数据统计 -->
+                    <div class="col-lg-8">
+                        <article class="app-card h-100 p-4">
+                            <h5 class="mb-3">个人简介</h5>
+                            <p class="mb-3">
+                                专业知识扎实，具备机房全栈运维能力；安全保密意识强，擅长跨部门沟通，可独立承担多分支机构运维、
+                                会议保障、员工 IT 培训等综合工作，自主学习能力强。
+                            </p>
+                            <p class="text-muted small">
+                                独立负责上海两家分公司（博阳、索昕）的信息化与运维工作，覆盖网络、服务器、虚拟化、弱电、
+                                信息安全、桌面支持、固定资产与会议保障全流程。
+                            </p>
+
+                            <div class="d-flex flex-wrap gap-2 mb-4">
+                                <span class="badge bg-primary">机房全栈运维</span>
+                                <span class="badge bg-info text-dark">网络规划</span>
+                                <span class="badge bg-success">虚拟化</span>
+                                <span class="badge bg-warning text-dark">信息安全</span>
+                                <span class="badge bg-secondary">AI 工具应用</span>
+                            </div>
+
+                            <!-- 数据统计（数字滚动效果，数值可在 JS 中修改） -->
+                            <div class="row g-3 border-top pt-4">
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-box">
+                                        <div class="stat-num"><span class="counter" data-target="8">0</span>+</div>
+                                        <div class="stat-label">年 IT 从业经验</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-box">
+                                        <div class="stat-num"><span class="counter" data-target="2">0</span></div>
+                                        <div class="stat-label">独立负责分公司</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-box">
+                                        <div class="stat-num"><span class="counter" data-target="30">0</span>+</div>
+                                        <div class="stat-label">机房设备与系统</div>
+                                    </div>
+                                </div>
+                                <div class="col-6 col-md-3">
+                                    <div class="stat-box">
+                                        <div class="stat-num"><span class="counter" data-target="200">0</span>+</div>
+                                        <div class="stat-label">终端用户支持</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             4. 专业技能（Bootstrap 选项卡 + 进度条 + 标签）
+             ============================================================ -->
+        <section id="skills" class="section-block alt">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-gear-wide-connected me-2"></i>专业技能</h2>
+                    <p class="section-sub">网络、系统、安全、开发四条主线，独立完成从规划到运维的全过程</p>
+                </div>
+
+                <div class="app-card p-4">
+                    <!-- 选项卡导航 -->
+                    <ul class="nav nav-tabs" id="skillTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="tab-network" data-bs-toggle="tab" data-bs-target="#pane-network"
+                                    type="button" role="tab" aria-controls="pane-network" aria-selected="true">
+                                <i class="bi bi-router me-1"></i>网络与系统
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-security" data-bs-toggle="tab" data-bs-target="#pane-security"
+                                    type="button" role="tab" aria-controls="pane-security" aria-selected="false">
+                                <i class="bi bi-shield-lock me-1"></i>安全与运维
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-soft" data-bs-toggle="tab" data-bs-target="#pane-soft"
+                                    type="button" role="tab" aria-controls="pane-soft" aria-selected="false">
+                                <i class="bi bi-headset me-1"></i>桌面支持与服务
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="tab-ai" data-bs-toggle="tab" data-bs-target="#pane-ai"
+                                    type="button" role="tab" aria-controls="pane-ai" aria-selected="false">
+                                <i class="bi bi-cpu me-1"></i>AI 与开发
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content pt-4" id="skillTabContent">
+                        <!-- 网络与系统 -->
+                        <div class="tab-pane fade show active" id="pane-network" role="tabpanel" aria-labelledby="tab-network">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="skill-bar">
+                                        <div class="d-flex justify-content-between"><span>局域网规划组网</span><span>90%</span></div>
+                                        <div class="progress" role="progressbar" aria-label="局域网规划组网" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-primary" style="width:90%">90%</div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="d-flex justify-content-between"><span>虚拟化 ESXi / VMware</span><span>85%</span></div>
+                                        <div class="progress" role="progressbar" aria-label="虚拟化" aria-valuenow="85" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-info" style="width:85%">85%</div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="d-flex justify-content-between"><span>AD 域 / VDI 云桌面</span><span>82%</span></div>
+                                        <div class="progress" role="progressbar" aria-label="AD域与云桌面" aria-valuenow="82" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-success" style="width:82%">82%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="skill-bar">
+                                        <div class="d-flex justify-content-between"><span>综合布线 / 弱电监控门禁</span><span>88%</span></div>
+                                        <div class="progress" role="progressbar" aria-label="综合布线" aria-valuenow="88" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-warning" style="width:88%">88%</div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="d-flex justify-content-between"><span>Linux 服务器</span><span>80%</span></div>
+                                        <div class="progress" role="progressbar" aria-label="Linux服务器" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-secondary" style="width:80%">80%</div>
+                                        </div>
+                                    </div>
+                                    <div class="skill-bar">
+                                        <div class="d-flex justify-content-between"><span>NAS 存储 / SQL 环境</span><span>78%</span></div>
+                                        <div class="progress" role="progressbar" aria-label="存储与数据库" aria-valuenow="78" aria-valuemin="0" aria-valuemax="100">
+                                            <div class="progress-bar bg-dark" style="width:78%">78%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 安全与运维 -->
+                        <div class="tab-pane fade" id="pane-security" role="tabpanel" aria-labelledby="tab-security">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-danger fs-6">深信服 AC / 防火墙</span>
+                                <span class="badge bg-warning text-dark fs-6">信息安全制度 SOP</span>
+                                <span class="badge bg-primary fs-6">隔离防火墙 / NAC</span>
+                                <span class="badge bg-info text-dark fs-6">机房安全 / UPS 管理</span>
+                                <span class="badge bg-success fs-6">数据备份 / 日志监控</span>
+                                <span class="badge bg-secondary fs-6">联软安全运维</span>
+                            </div>
+                            <p class="text-muted mb-0">
+                                熟悉企业级网络安全设备与信息安全制度建设，可独立完成机房全栈运维、数据备份与应急响应，
+                                并对接浦东科经委、工信部信息安全审查工作。
+                            </p>
+                        </div>
+
+                        <!-- 桌面支持与服务 -->
+                        <div class="tab-pane fade" id="pane-soft" role="tabpanel" aria-labelledby="tab-soft">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><i class="bi bi-check2-circle text-success me-2"></i>U8、钉钉、Office 等业务系统支持</li>
+                                        <li class="list-group-item"><i class="bi bi-check2-circle text-success me-2"></i>电脑软硬件安装、系统故障排查</li>
+                                        <li class="list-group-item"><i class="bi bi-check2-circle text-success me-2"></i>入离职账号、VPN、入网权限管理</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item"><i class="bi bi-check2-circle text-success me-2"></i>IT 固定资产选型、台账与报废管理</li>
+                                        <li class="list-group-item"><i class="bi bi-check2-circle text-success me-2"></i>视频会议与大型活动 IT 现场保障</li>
+                                        <li class="list-group-item"><i class="bi bi-check2-circle text-success me-2"></i>新员工办公流程与网络安全培训</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- AI 与开发 -->
+                        <div class="tab-pane fade" id="pane-ai" role="tabpanel" aria-labelledby="tab-ai">
+                            <div class="d-flex flex-wrap gap-2 mb-3">
+                                <span class="badge bg-primary fs-6">Trae</span>
+                                <span class="badge bg-info text-dark fs-6">WorkBuddy</span>
+                                <span class="badge bg-success fs-6">ChatGPT</span>
+                                <span class="badge bg-warning text-dark fs-6">千问</span>
+                                <span class="badge bg-secondary fs-6">小程序开发</span>
+                                <span class="badge bg-dark fs-6">轻量化运维工具</span>
+                            </div>
+                            <p class="text-muted mb-0">
+                                熟练使用主流 AI 工具辅助开发与运维，了解前后端基本原理，可结合业务需求开发小程序与轻量化运维工具。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             5. 项目作品（卡片 + 模态框查看详情）
+             ============================================================ -->
+        <section id="works" class="section-block">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-collection me-2"></i>项目作品</h2>
+                    <p class="section-sub">从网络改造到虚拟化平台，每个项目都包含方案、实施与运维</p>
+                </div>
+
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-4">
+                    <div class="col">
+                        <article class="app-card work-card h-100 p-4">
+                            <div class="icon bg-grad-1"><i class="bi bi-diagram-3"></i></div>
+                            <h5>企业局域网改造</h5>
+                            <p class="small text-muted">多分支机构网络规划与组网设计，同步编写信息安全制度与 SOP 流程。</p>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-auto" data-bs-toggle="modal"
+                                    data-bs-target="#workModal" data-title="企业局域网改造">查看详情</button>
+                        </article>
+                    </div>
+
+                    <div class="col">
+                        <article class="app-card work-card h-100 p-4">
+                            <div class="icon bg-grad-2"><i class="bi bi-hdd-network"></i></div>
+                            <h5>机房虚拟化平台</h5>
+                            <p class="small text-muted">基于 VMware ESXi 搭建虚拟化集群，部署 AD 域与深信服 VDI 云桌面。</p>
+                            <button type="button" class="btn btn-sm btn-outline-success mt-auto" data-bs-toggle="modal"
+                                    data-bs-target="#workModal" data-title="机房虚拟化平台">查看详情</button>
+                        </article>
+                    </div>
+
+                    <div class="col">
+                        <article class="app-card work-card h-100 p-4">
+                            <div class="icon bg-grad-3"><i class="bi bi-cpu"></i></div>
+                            <h5>智能化运维小工具</h5>
+                            <p class="small text-muted">使用 AI 辅助开发轻量化运维脚本与小程序，提升日常巡检与台账效率。</p>
+                            <button type="button" class="btn btn-sm btn-outline-secondary mt-auto" data-bs-toggle="modal"
+                                    data-bs-target="#workModal" data-title="智能化运维小工具">查看详情</button>
+                        </article>
+                    </div>
+
+                    <div class="col">
+                        <article class="app-card work-card h-100 p-4">
+                            <div class="icon bg-grad-4"><i class="bi bi-camera-video"></i></div>
+                            <h5>视频会议保障</h5>
+                            <p class="small text-muted">跨地区、跨国、政府级别视频会议的系统调试、现场部署与技术保障。</p>
+                            <button type="button" class="btn btn-sm btn-outline-warning mt-auto" data-bs-toggle="modal"
+                                    data-bs-target="#workModal" data-title="视频会议保障">查看详情</button>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             6. 视频展示（自定义播放器：播放/暂停、时长、进度条拖拽）
+             ============================================================ -->
+        <section id="video" class="section-block alt">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-play-circle me-2"></i>视频展示</h2>
+                    <p class="section-sub">点击画面可播放 / 暂停，进度条支持点击与拖拽</p>
+                </div>
+
+                <div class="row g-4 align-items-center">
+                    <div class="col-lg-7">
+                        <div class="video-player">
+                            <video id="myVideo" preload="metadata" playsinline title="点击画面可播放或暂停">
+                                <!-- 本地视频：把 video.mp4 放到本页面同一文件夹即可，找不到时自动使用下面的在线视频 -->
+                                <source src="video.mp4" type="video/mp4">
+                                <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+                                您的浏览器不支持 HTML5 视频播放，请升级浏览器。
+                            </video>
+                            <div class="player-controls">
+                                <button type="button" id="playBtn" title="播放 / 暂停" aria-label="播放或暂停">▶</button>
+                                <span class="time-display" id="currentTime">00:00</span>
+                                <div class="progress-bar-track" id="progressBar" title="点击或拖拽调整进度">
+                                    <div class="progress-filled" id="progressFilled"></div>
+                                    <div class="progress-dot" id="progressDot"></div>
+                                </div>
+                                <span class="time-display" id="durationTime">00:00</span>
+                                <button type="button" id="muteBtn" title="静音 / 取消静音" aria-label="静音切换">🔊</button>
+                                <button type="button" id="fullscreenBtn" title="全屏播放" aria-label="全屏">⛶</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="app-card p-4 h-100">
+                            <h5 class="mb-3"><i class="bi bi-info-circle me-1"></i>视频说明</h5>
+                            <p class="small text-muted mb-3">
+                                本视频用于展示个人技能与项目经验，播放器使用 HTML5 <code>&lt;video&gt;</code> 标签
+                                配合原生 JavaScript 实现，不依赖第三方插件。
+                            </p>
+                            <ul class="list-unstyled small mb-0">
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>显示视频总时长与当前进度</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>支持播放 / 暂停与静音切换</li>
+                                <li class="mb-2"><i class="bi bi-check2 text-success me-2"></i>进度条可点击、可拖拽跳转</li>
+                                <li><i class="bi bi-check2 text-success me-2"></i>支持全屏播放</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             7. 成长经历（时间轴：教育背景 + 工作经历 + 证书）
+             ============================================================ -->
+        <section id="journey" class="section-block">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-signpost-split me-2"></i>成长经历</h2>
+                    <p class="section-sub">教育背景、职业成长与专业认证</p>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-5">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-4"><i class="bi bi-mortarboard me-2"></i>教育背景与证书</h5>
+                            <div class="timeline">
+                                <div class="timeline-item">
+                                    <h5>国家开放大学</h5>
+                                    <p class="meta"><time datetime="2025-03">2025 年春季</time> · 大专</p>
+                                    <p class="small text-muted mb-0">计算机网络技术（网页设计方向）</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>CCNA 思科认证网络工程师</h5>
+                                    <p class="meta">已获得</p>
+                                    <p class="small text-muted mb-0">具备网络规划、设备配置与故障排查能力</p>
+                                </div>
+                                <div class="timeline-item">
+                                    <h5>信息安全制度与 SOP 编制</h5>
+                                    <p class="meta">项目经验</p>
+                                    <p class="small text-muted mb-0">参与公司信息化制度编写与信息安全审查</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-7">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-3"><i class="bi bi-briefcase me-2"></i>工作经历 · IT 运维负责人</h5>
+                            <p class="small text-muted mb-3">
+                                上海公司（博阳、索昕两家分公司）· 独立负责信息化建设与日常运维
+                            </p>
+
+                            <!-- <details> 折叠展示，避免内容过长；点击展开查看全部职责 -->
+                            <details open>
+                                <summary class="fw-bold text-primary mb-2" style="cursor:pointer;">岗位职责（点击展开 / 收起）</summary>
+                                <ul class="list-unstyled small mb-0 mt-2">
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>参与信息化系统建设，编制操作规范等制度，对接浦东科经委、工信部信息安全审查。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>负责公司网络、弱电设备维护，对接厂家及信息安检等委外事项。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>文件服务器、上网、VPN 平台权限分配；入离职账号与入网权限管理，电脑软硬件准备及台账登记。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>维护公司及分公司异地网络设备、服务器硬件与系统，按需搭建各类服务器角色。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>门禁、监控及办公弱电设备建设维护，办理对外电话与网络相关事宜。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>建设维护上海信息机房：SD-WAN、下一代防火墙、华为核心交换、深信服 AC、隔离防火墙、NAC、联软安全运维；ESXi 虚拟化、AD 域、VDI 云桌面、Linux Web 平台、群晖 NAS、安防监控与视频会议系统。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>机房服务器与数据备份、网络日志监控、机房安全与 UPS 管理。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>全公司桌面技术支持：U8、钉钉、Office、系统故障与软件调试安装。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>IT 固定资产统计，电脑与打印机选型请购、出入库台账与报废管理。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>钉钉后台维护：审批流搭建、组织架构与功能配置。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>跨地区、跨国、政府级视频会议与大型活动 IT 部署调试、现场保障。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>IT 设备、弱电监控门禁选型采购、调试部署与维保对接。</li>
+                                    <li class="mb-2"><i class="bi bi-dot text-primary"></i>新员工培训：VPN 操作、报销系统、网络安全与办公流程。</li>
+                                    <li><i class="bi bi-dot text-primary"></i>完成各类 IT 临时项目实施。</li>
+                                </ul>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             8. 网站维护（更新日志 + 上线信息 + 维护清单）
+             对应实训内容：网页上传与测试、网页维护
+             ============================================================ -->
+        <section id="maintain" class="section-block alt">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-tools me-2"></i>网站维护</h2>
+                    <p class="section-sub">上线信息、更新日志与日常维护清单（实训内容展示）</p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- 上线信息 -->
+                    <div class="col-lg-4">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-3"><i class="bi bi-cloud-arrow-up me-2"></i>上线与测试</h5>
+                            <ul class="list-group list-group-flush small">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>部署方式</span><strong>GitHub Pages 静态托管</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>页面类型</span><strong>单页响应式网站</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>技术栈</span><strong>HTML5 + CSS3 + JS</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>UI 框架</span><strong>Bootstrap 5</strong>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>最近更新</span>
+                                    <strong><time datetime="2026-11-21">2026-11-21</time></strong>
+                                </li>
+                            </ul>
+                            <p class="small text-muted mt-3 mb-0">
+                                访问地址格式：<br><code>https://用户名.github.io/仓库名/</code>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 维护清单 -->
+                    <div class="col-lg-4">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-3"><i class="bi bi-clipboard-check me-2"></i>日常维护清单</h5>
+                            <div class="maintain-item">
+                                <i class="bi bi-arrow-repeat"></i>
+                                <div>
+                                    <strong class="d-block">内容更新</strong>
+                                    <span class="small text-muted">作品、技能与经历变动时同步更新页面</span>
+                                </div>
+                            </div>
+                            <div class="maintain-item">
+                                <i class="bi bi-link-45deg"></i>
+                                <div>
+                                    <strong class="d-block">链接检查</strong>
+                                    <span class="small text-muted">定期检查导航、外链与视频地址是否有效</span>
+                                </div>
+                            </div>
+                            <div class="maintain-item">
+                                <i class="bi bi-phone"></i>
+                                <div>
+                                    <strong class="d-block">兼容性测试</strong>
+                                    <span class="small text-muted">Chrome / Edge / 手机浏览器分别验证显示与交互</span>
+                                </div>
+                            </div>
+                            <div class="maintain-item">
+                                <i class="bi bi-hdd"></i>
+                                <div>
+                                    <strong class="d-block">版本备份</strong>
+                                    <span class="small text-muted">每次修改前保留本地副本，提交记录可回溯</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 更新日志 -->
+                    <div class="col-lg-4">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-3"><i class="bi bi-clock-history me-2"></i>更新日志</h5>
+                            <table class="table table-sm log-table mb-0">
+                                <thead class="table-light">
+                                    <tr><th>版本</th><th>更新内容</th><th>日期</th></tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-primary">v2.0</span></td>
+                                        <td>重构网站结构，新增项目作品、成长经历、留言板与网站维护模块</td>
+                                        <td class="text-nowrap">2026-11-21</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-secondary">v1.5</span></td>
+                                        <td>加入自定义视频播放器，支持进度拖拽与全屏</td>
+                                        <td class="text-nowrap">2026-11-20</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-secondary">v1.0</span></td>
+                                        <td>网站首次上线，完成个人介绍、技能与联系方式</td>
+                                        <td class="text-nowrap">2026-11-18</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             9. 联系我（HTML5 表单 + 本地留言板）
+             ============================================================ -->
+        <section id="contact" class="section-block">
+            <div class="container">
+                <div class="section-head">
+                    <h2 class="section-title"><i class="bi bi-envelope-paper me-2"></i>联系我</h2>
+                    <p class="section-sub">欢迎留言交流，留言会保存在本地浏览器中（仅本机可见）</p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- 联系方式 -->
+                    <div class="col-lg-4">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-3">联系方式</h5>
+                            <p class="mb-3"><i class="bi bi-person me-2 text-primary"></i><strong>姓名：</strong>帽帽</p>
+                            <p class="mb-3"><i class="bi bi-briefcase me-2 text-primary"></i><strong>意向岗位：</strong>IT 运维 / 系统集成 / 机房运维</p>
+                            <p class="mb-3"><i class="bi bi-envelope me-2 text-primary"></i><strong>邮箱：</strong>
+                                <a href="mailto:example@email.com">***@email.com</a></p>
+                            <p class="mb-3"><i class="bi bi-telephone me-2 text-primary"></i><strong>电话：</strong>138-0000-0000</p>
+                            <p class="mb-0"><i class="bi bi-geo-alt me-2 text-primary"></i><strong>所在地：</strong>上海</p>
+                            <div class="alert alert-light border small mt-3 mb-0">
+                                <i class="bi bi-info-circle me-1"></i>示例联系方式，用于展示。
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 留言表单 -->
+                    <div class="col-lg-8">
+                        <div class="app-card h-100 p-4">
+                            <h5 class="mb-3">在线留言</h5>
+
+                            <!-- HTML5 表单：required、type=email、pattern 等原生校验 -->
+                            <form id="messageForm" class="needs-validation" novalidate>
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="visitorName" class="form-label">您的称呼 <span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="visitorName" name="name"
+                                               placeholder="请输入称呼" maxlength="20" required>
+                                        <div class="invalid-feedback">请填写您的称呼（不超过 20 字）。</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="visitorEmail" class="form-label">电子邮箱 <span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="visitorEmail" name="email"
+                                               placeholder="name@example.com" required>
+                                        <div class="invalid-feedback">请填写有效的邮箱地址。</div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="visitorType" class="form-label">留言类型</label>
+                                        <select class="form-select" id="visitorType" name="type">
+                                            <option value="求职沟通">求职沟通</option>
+                                            <option value="技术交流">技术交流</option>
+                                            <option value="项目合作">项目合作</option>
+                                            <option value="其他">其他</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="visitorPhone" class="form-label">联系电话（选填）</label>
+                                        <input type="tel" class="form-control" id="visitorPhone" name="phone"
+                                               pattern="^1[3-9]\d{9}$" placeholder="11 位手机号">
+                                        <div class="invalid-feedback">手机号格式不正确（11 位，1 开头）。</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <label for="messageContent" class="form-label">留言内容 <span class="text-danger">*</span></label>
+                                        <textarea class="form-control" id="messageContent" name="content" rows="4"
+                                                  placeholder="请输入留言内容" maxlength="300" required></textarea>
+                                        <div class="invalid-feedback">请填写留言内容。</div>
+                                        <div class="form-text text-end"><span id="charCount">0</span>/300</div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" id="agreeCheck" required>
+                                            <label class="form-check-label" for="agreeCheck">我已阅读并同意留言仅保存在本地浏览器</label>
+                                            <div class="invalid-feedback">请先勾选同意。</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 d-flex gap-2 flex-wrap">
+                                        <button type="submit" class="btn btn-primary px-4"><i class="bi bi-send me-1"></i>提交留言</button>
+                                        <button type="reset" class="btn btn-outline-secondary">重置</button>
+                                        <button type="button" class="btn btn-outline-danger ms-auto" id="clearMsgBtn">
+                                            <i class="bi bi-trash me-1"></i>清空留言
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div class="alert alert-success mt-3 d-none" id="successAlert" role="alert">
+                                <i class="bi bi-check-circle me-1"></i>留言已提交，已保存到本地留言板！
+                            </div>
+
+                            <hr class="my-4">
+                            <h6 class="mb-3"><i class="bi bi-chat-dots me-1"></i>留言板（<span id="msgCount">0</span> 条）</h6>
+                            <div id="messageList">
+                                <p class="text-muted small mb-0" id="emptyTip">暂无留言，欢迎留下第一条。</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         10. 页脚（网站地图 + 版权）
+         ============================================================ -->
+    <footer class="pt-5 pb-3 mt-0">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-5">
+                    <h6 class="fw-bold mb-2"><i class="bi bi-person-badge me-1"></i>帽帽 · 个人网站</h6>
+                    <p class="small mb-2" style="color:#bfd3e8;">
+                        IT 运维 / 系统集成 / 机房运维工程师个人主页，用于展示个人简介、专业技能、项目作品与联系方式。
+                    </p>
+                    <p class="small mb-0" style="color:#8aa6c2;">技术栈：HTML5 · CSS3 · JavaScript · Bootstrap 5</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="fw-bold mb-2">网站地图</h6>
+                    <ul class="list-unstyled small mb-0">
+                        <li><a href="#about">关于我</a></li>
+                        <li><a href="#skills">专业技能</a></li>
+                        <li><a href="#works">项目作品</a></li>
+                        <li><a href="#journey">成长经历</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3">
+                    <h6 class="fw-bold mb-2">更多</h6>
+                    <ul class="list-unstyled small mb-0">
+                        <li><a href="#video">视频展示</a></li>
+                        <li><a href="#maintain">网站维护</a></li>
+                        <li><a href="#contact">联系我</a></li>
+                        <li><a href="#top">返回顶部</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4" style="border-color:rgba(255,255,255,.15);">
+            <p class="text-center small mb-0" style="color:#9db6cd;">
+                © <span id="year">2026</span> 帽帽 个人网站 · 保留所有权利 ·
+                <time datetime="2026-11-21">2026-11-21</time> 更新
+            </p>
+        </div>
+    </footer>
+
+    <!-- 返回顶部按钮 -->
+    <button type="button" class="btn btn-primary shadow" id="backToTop" aria-label="返回顶部">
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
+    <!-- ============================================================
+         11. 作品详情模态框（Bootstrap Modal）
+         ============================================================ -->
+    <div class="modal fade" id="workModal" tabindex="-1" aria-labelledby="workModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="workModalLabel">作品详情</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="关闭"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="mb-0" id="workModalText">这里展示项目的详细内容。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal">知道了</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS 插件包 -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+    /* ==================================================================
+       网站脚本说明（网页维护时可对照修改）：
+       1. 标签页 / 轮播 / 模态框 / 折叠面板 —— Bootstrap 自动处理，无需额外代码
+       2. 导航高亮、返回顶部、数字滚动 —— 原生 JS
+       3. 视频播放器 —— 原生 JS 控制 HTML5 <video>
+       4. 留言板 —— 原生 JS + localStorage 本地存储
+       ================================================================== */
+
+    /* ---------- 1. 工具提示与弹出框初始化 ---------- */
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (el) {
+        new bootstrap.Tooltip(el);
+    });
+    document.querySelectorAll('[data-bs-toggle="popover"]').forEach(function (el) {
+        new bootstrap.Popover(el);
+    });
+
+    /* ---------- 2. 导航栏高亮：滚动到哪一节，对应菜单项变色 ---------- */
+    (function () {
+        const links = Array.from(document.querySelectorAll('#mainNav .nav-link'));
+        const sections = links.map(function (a) {
+            const href = a.getAttribute('href');
+            return href && href.startsWith('#') ? document.querySelector(href) : null;
+        }).filter(Boolean);
+
+        function setActive() {
+            const scrollPos = window.scrollY + 120;
+            let currentIndex = 0;
+            sections.forEach(function (sec, i) {
+                if (sec.offsetTop <= scrollPos) currentIndex = i;
+            });
+            links.forEach(function (a) { a.classList.remove('active'); });
+            const activeLink = links.filter(function (a) {
+                return a.getAttribute('href') === '#' + sections[currentIndex].id;
+            })[0];
+            if (activeLink) activeLink.classList.add('active');
+        }
+
+        // 点击导航后收起移动端折叠菜单
+        document.querySelectorAll('#navbarContent .nav-link').forEach(function (a) {
+            a.addEventListener('click', function () {
+                const collapse = document.getElementById('navbarContent');
+                if (collapse.classList.contains('show')) {
+                    bootstrap.Collapse.getOrCreateInstance(collapse).hide();
+                }
+            });
+        });
+
+        window.addEventListener('scroll', setActive, { passive: true });
+        setActive();
+    })();
+
+    /* ---------- 3. 数据统计数字滚动（滚动到"关于我"时触发一次） ---------- */
+    (function () {
+        const counters = document.querySelectorAll('.counter');
+        let started = false;
+
+        function runCounters() {
+            if (started) return;
+            started = true;
+            counters.forEach(function (el) {
+                const target = parseInt(el.dataset.target, 10) || 0;
+                const duration = 1200;              // 动画时长（毫秒）
+                const startTime = performance.now();
+                function step(now) {
+                    const progress = Math.min((now - startTime) / duration, 1);
+                    el.textContent = Math.floor(target * progress);
+                    if (progress < 1) requestAnimationFrame(step);
+                }
+                requestAnimationFrame(step);
+            });
+        }
+
+        if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) { runCounters(); io.disconnect(); }
+                });
+            }, { threshold: 0.3 });
+            io.observe(document.querySelector('#about .stat-box'));
+        } else {
+            runCounters();
+        }
+    })();
+
+    /* ---------- 4. 返回顶部按钮 ---------- */
+    (function () {
+        const btn = document.getElementById('backToTop');
+        window.addEventListener('scroll', function () {
+            btn.style.display = window.scrollY > 400 ? 'block' : 'none';
+        }, { passive: true });
+        btn.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    })();
+
+    /* ---------- 5. 作品详情模态框：按点击的作品显示不同标题 ---------- */
+    (function () {
+        const workModal = document.getElementById('workModal');
+        const descriptions = {
+            '企业局域网改造': '为企业多分支机构重新规划局域网地址与路由策略，统一网络设备配置规范，编写配套的信息安全制度与 SOP 流程，显著提升网络稳定性与可维护性。',
+            '机房虚拟化平台': '基于 VMware ESXi 搭建虚拟化集群，规划存储与网络资源，部署 AD 域环境与深信服 VDI 云桌面，实现服务器资源集中管理与快速交付。',
+            '智能化运维小工具': '借助 AI 编程工具开发轻量化巡检、台账与备份提醒脚本，减少重复性手工操作，让日常运维工作更高效、更规范。',
+            '视频会议保障': '为跨地区、跨国及政府级视频会议提供会前设备调试、会中现场保障与应急处理，保证多场大型会议顺利进行。'
+        };
+
+        workModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget;
+            const title = (button && button.getAttribute('data-title')) || '作品详情';
+            workModal.querySelector('#workModalLabel').textContent = title;
+            workModal.querySelector('#workModalText').textContent =
+                descriptions[title] || '该项目体现了本人在 IT 运维与系统集成方面的实践经验，包括方案设计、实施部署与后期维护等环节。';
+        });
+    })();
+
+    /* ---------- 6. 自定义视频播放器 ---------- */
+    (function () {
+        const video = document.getElementById('myVideo');
+        const playBtn = document.getElementById('playBtn');
+        const progressBar = document.getElementById('progressBar');
+        const progressFilled = document.getElementById('progressFilled');
+        const progressDot = document.getElementById('progressDot');
+        const currentTimeEl = document.getElementById('currentTime');
+        const durationEl = document.getElementById('durationTime');
+        const muteBtn = document.getElementById('muteBtn');
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+        // 秒 → mm:ss
+        function formatTime(seconds) {
+            if (!isFinite(seconds) || isNaN(seconds)) return '00:00';
+            const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+            const s = Math.floor(seconds % 60).toString().padStart(2, '0');
+            return m + ':' + s;
+        }
+
+        function togglePlay() {
+            if (video.paused || video.ended) {
+                video.play().catch(function () { /* 自动播放被拦截时忽略 */ });
+            } else {
+                video.pause();
+            }
+        }
+
+        playBtn.addEventListener('click', togglePlay);
+        video.addEventListener('click', togglePlay);
+
+        video.addEventListener('play', function () { playBtn.textContent = '❚❚'; });
+        video.addEventListener('pause', function () { playBtn.textContent = '▶'; });
+        video.addEventListener('ended', function () { playBtn.textContent = '▶'; });
+
+        video.addEventListener('loadedmetadata', function () {
+            durationEl.textContent = formatTime(video.duration);
+        });
+        video.addEventListener('timeupdate', function () {
+            const percent = video.duration ? (video.currentTime / video.duration) * 100 : 0;
+            progressFilled.style.width = percent + '%';
+            progressDot.style.left = percent + '%';
+            currentTimeEl.textContent = formatTime(video.currentTime);
+        });
+
+        // 点击 / 拖拽进度条跳转
+        function seekTo(clientX) {
+            const rect = progressBar.getBoundingClientRect();
+            let percent = (clientX - rect.left) / rect.width;
+            percent = Math.min(1, Math.max(0, percent));
+            if (video.duration) video.currentTime = percent * video.duration;
+        }
+        progressBar.addEventListener('click', function (e) { seekTo(e.clientX); });
+
+        let dragging = false;
+        progressBar.addEventListener('mousedown', function (e) { dragging = true; seekTo(e.clientX); });
+        document.addEventListener('mousemove', function (e) { if (dragging) seekTo(e.clientX); });
+        document.addEventListener('mouseup', function () { dragging = false; });
+
+        progressBar.addEventListener('touchstart', function (e) { dragging = true; seekTo(e.touches[0].clientX); }, { passive: true });
+        document.addEventListener('touchmove', function (e) { if (dragging) seekTo(e.touches[0].clientX); }, { passive: true });
+        document.addEventListener('touchend', function () { dragging = false; });
+
+        // 静音切换
+        muteBtn.addEventListener('click', function () {
+            video.muted = !video.muted;
+            muteBtn.textContent = video.muted ? '🔇' : '🔊';
+        });
+
+        // 全屏
+        fullscreenBtn.addEventListener('click', function () {
+            if (video.requestFullscreen) video.requestFullscreen();
+            else if (video.webkitRequestFullscreen) video.webkitRequestFullscreen();
+        });
+    })();
+
+    /* ---------- 7. 留言板：表单校验 + localStorage 保存 ---------- */
+    (function () {
+        const STORAGE_KEY = 'maomao_site_messages';
+        const form = document.getElementById('messageForm');
+        const successAlert = document.getElementById('successAlert');
+        const messageList = document.getElementById('messageList');
+        const emptyTip = document.getElementById('emptyTip');
+        const msgCount = document.getElementById('msgCount');
+        const clearBtn = document.getElementById('clearMsgBtn');
+        const contentInput = document.getElementById('messageContent');
+        const charCount = document.getElementById('charCount');
+
+        // 读取本地留言
+        function loadMessages() {
+            try {
+                return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        // 保存留言
+        function saveMessages(list) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+        }
+
+        // 渲染留言列表（使用 DOM 方法，避免 XSS）
+        function renderMessages() {
+            const list = loadMessages();
+            messageList.innerHTML = '';
+            msgCount.textContent = list.length;
+
+            if (!list.length) {
+                const tip = document.createElement('p');
+                tip.className = 'text-muted small mb-0';
+                tip.textContent = '暂无留言，欢迎留下第一条。';
+                messageList.appendChild(tip);
+                return;
+            }
+
+            // 最新留言在最上面
+            list.slice().reverse().forEach(function (m) {
+                const box = document.createElement('div');
+                box.className = 'msg-item';
+
+                const head = document.createElement('div');
+                head.className = 'd-flex justify-content-between align-items-center mb-1';
+
+                const name = document.createElement('span');
+                name.className = 'msg-name';
+                name.textContent = m.name + '（' + (m.type || '留言') + '）';
+
+                const time = document.createElement('span');
+                time.className = 'msg-time';
+                time.textContent = m.time;
+
+                head.appendChild(name);
+                head.appendChild(time);
+
+                const body = document.createElement('p');
+                body.className = 'small mb-0';
+                body.style.whiteSpace = 'pre-wrap';   // 保留换行
+                body.textContent = m.content;
+
+                box.appendChild(head);
+                box.appendChild(body);
+                messageList.appendChild(box);
+            });
+        }
+
+        // 字数统计
+        contentInput.addEventListener('input', function () {
+            charCount.textContent = this.value.length;
+        });
+
+        // 表单提交
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!form.checkValidity()) {
+                form.classList.add('was-validated');
+                return;
+            }
+
+            const list = loadMessages();
+            list.push({
+                name: document.getElementById('visitorName').value.trim(),
+                email: document.getElementById('visitorEmail').value.trim(),
+                phone: document.getElementById('visitorPhone').value.trim(),
+                type: document.getElementById('visitorType').value,
+                content: document.getElementById('messageContent').value.trim(),
+                time: new Date().toLocaleString('zh-CN', { hour12: false })
+            });
+            saveMessages(list);
+
+            successAlert.classList.remove('d-none');
+            form.reset();
+            form.classList.remove('was-validated');
+            charCount.textContent = '0';
+            renderMessages();
+
+            setTimeout(function () { successAlert.classList.add('d-none'); }, 4000);
+        });
+
+        // 清空留言
+        clearBtn.addEventListener('click', function () {
+            if (!loadMessages().length) return;
+            if (confirm('确定清空全部本地留言吗？此操作不可恢复。')) {
+                localStorage.removeItem(STORAGE_KEY);
+                renderMessages();
+            }
+        });
+
+        renderMessages();
+    })();
+
+    /* ---------- 8. 页脚年份自动更新 ---------- */
+    document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+</body>
+</html>
